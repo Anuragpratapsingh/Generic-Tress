@@ -1,9 +1,10 @@
 #include <iostream>
 #include<bits/stdc++.h>
 using namespace std;
-template<typename>T;
-class TreeNode()
+template<typename T>
+class TreeNode
 {
+    public:
     T data;
     vector<TreeNode<T>*>children;
     TreeNode(T data)
@@ -11,7 +12,7 @@ class TreeNode()
         this->data=data;
     }
 };
-int main() 
+int main()
 {
     //Dynamically hi banaenge
     TreeNode<int>*root=new TreeNode<int>(1);
