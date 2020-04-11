@@ -12,7 +12,7 @@ class TreeNode
         this->data=data;
     }
 };
-//Doubt
+
 int TreeHeight(TreeNode<int>*root)
 {
     //Edge case
@@ -20,17 +20,16 @@ int TreeHeight(TreeNode<int>*root)
     {
         return 0;
     }
-    int a=1;
-    int maxi=INT_MIN;
+    int height=0;;
     for(int i=0;i<root->children.size();i++)
     {
-        a=TreeHeight(root->children[i]);
-        if(maxi<a)
+        int a=TreeHeight(root->children[i]);
+        if(height<a)
         {
-            maxi=a;
+            height=a;
         }
     }
-    return 1+a;
+    return 1+height;
 }
 int LeafNodes(TreeNode<int>*root)
 {
@@ -51,6 +50,30 @@ int LeafNodes(TreeNode<int>*root)
     }
     return a;
 }
+void Preorder(TreeNode<int>*root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    cout<<root->data<<" ";
+    for(int i=0;i<root->children.size();i++)
+    {
+        Preorder(root->children[i]);
+    }
+}
+void Postorder(TreeNode<int>*root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+        Postorder(root->children[i]);
+    }
+    cout<<root->data<<" ";
+}
 void NodeAtDepthK(TreeNode<int>*root,int k)
 {
     //Edge case
@@ -70,32 +93,24 @@ void NodeAtDepthK(TreeNode<int>*root,int k)
     }
     return;
 }
+
 TreeNode<int>*MaxNode(TreeNode<int>*root)
 {
-    if(root==NULL)
+   if(root==NULL)
     {
         return NULL;
     }
-    int number=root->children.size();
-    TreeNode<int>*answer;
-    int maxi=INT_MIN;
-    for(int i=0;i<number;i++)
+    TreeNode<int>*max=root;
+    for(int i=0;i<root->children.size();i++)
     {
-        TreeNode<int>*possible=MaxNode(root->children[i]);
-        if(possible->data>maxi)
+        TreeNode<int>*temp=MaxNode(root->children[i]);
+        if(temp->data>max->data)
         {
-            maxi=possible->data;
-            answer=possible;
+            max=temp;
         }
     }
-    if(answer->data>root->data)
-    {
-        return answer;
-    }
-    else
-    {
-        return root;
-    }
+    //Just see that this line after for loop will run for the leaf node the first time.
+    return max;
 }
 int countNodes(TreeNode<int>*root)
 {
@@ -209,10 +224,14 @@ int main()
    cout<<answer->data<<endl;
    */
    //cout<<LeafNodes(root);
-   cout<<"Enter the value of k"<<endl;
+   /*cout<<"Enter the value of k"<<endl;
    int k;
    cin>>k;
    NodeAtDepthK(root,k);
+   */
+   Preorder(root);
+   cout<<endl;
+   Postorder(root);
     //Dynamically hi banaenge
     /*
     TreeNode<int>*root=new TreeNode<int>(1);
