@@ -29,6 +29,7 @@ int TreeHeight(TreeNode<int>*root)
             height=a;
         }
     }
+    //Root ki height add karke bhej denge
     return 1+height;
 }
 int LeafNodes(TreeNode<int>*root)
