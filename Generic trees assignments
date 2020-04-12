@@ -1,0 +1,307 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+template<typename T>
+class TreeNode
+{
+    public:
+    T data;
+    vector<TreeNode<T>*>children;
+    TreeNode(T data)
+    {
+        this->data=data;
+    }
+};
+int GreaterX(TreeNode<int>*root,int x)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    int count=0;
+    if(root->data>x)
+    {
+        count++;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+       count=count+GreaterX(root->children[i],x);
+    }
+    return count;
+}
+//3 methods actually
+//1st method
+int NodeWithMaxSum(TreeNode<int>*root)
+{
+   if(root==NULL)
+    {
+        return 0;
+    }
+    static int max=root->data;
+    static TreeNode<int>*maxNode=root;
+    int sum=root->data;
+    for(int i=0;i<root->children.size();i++)
+    {
+        sum=sum+root->children[i]->data;
+    }
+    if(sum>max)
+    {
+        max=sum;
+        maxNode=root;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+        NodeWithMaxSum(root->children[i]);
+    }
+    return maxNode->data;
+}
+//2nd Method
+
+TreeNode<int>*NodeWithMaxSum2(TreeNode<int>*root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    TreeNode<int>*maxNode=root;
+    int maxSum=root->data;
+    for(int i=0;i<root->children.size();i++)
+    {
+        maxSum=maxSum+root->children[i]->data;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+        TreeNode<int>*PossibleAnswer=NodeWithMaxSum2(root->children[i]);
+        int xsum=PossibleAnswer->data;
+    for(int i=0;i<PossibleAnswer->children.size();i++)
+    {
+       xsum=xsum+PossibleAnswer->children[i]->data;
+
+    }
+    if(xsum>maxSum)
+    {
+        maxSum=xsum;
+        maxNode=PossibleAnswer;
+    }
+    }
+    return maxNode;
+}
+//3rd Method
+//Return pair Both the max node an its sum
+pair<TreeNode<int>*,int>NodeWithMaxSum3(TreeNode<int>*root)
+{
+    TreeNode<int>*maxNode=root;
+    int maxSum=root->data;
+
+    for(int i=0;i<root->children.size();i++)
+    {
+        maxSum=maxSum+root->children[i]->data;
+    }
+    pair<TreeNode<int>*,int>Max=make_pair(root,maxSum);
+    for(int i=0;i<root->children.size();i++)
+    {
+         pair <TreeNode<int>*,int>possible=NodeWithMaxSum3(root->children[i]);
+         if(possible.second>Max.second)
+         {
+             Max.first=possible.first;
+             Max.second=possible.second;
+         }
+    }
+    return Max;
+}
+//Get the just greater element then n
+TreeNode<int>* nextLargerElement(TreeNode<int> *root, int n)
+{
+    if(root==NULL)
+    {
+        return NULL;
+    }
+    TreeNode<int>*ans=new TreeNode<int>(INT_MAX);
+    if(root->data>n)
+    {
+        ans=root;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+        //Recursion will search and find the element wich is greater then n.
+        TreeNode<int>*possible=nextLargerElement(root->children[i],n);
+        if(possible->data<ans->data)
+        {
+            ans=possible;
+        }
+    }
+    return ans;
+}
+//WRONG SECOND LARGEST WALA
+TreeNode<int>*secondLargest(TreeNode<int> *root)
+{
+    if(root==NULL)
+    {
+        return NULL;
+    }
+    TreeNode<int>*ans1=root;
+    TreeNode<int>*ans2=new TreeNode<int>(INT_MIN);
+    if(root->data>ans1->data)
+    {
+        ans1=root;
+    }
+    if(root->data<ans1->data&&root->data>ans2->data)
+    {
+        ans2=root;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+         TreeNode<int>*possible=secondLargest(root->children[i]);
+         if(possible->data>ans1->data)
+    {
+        ans1=possible;
+    }
+    if(possible->data<ans1->data&&possible->data>ans2->data)
+    {
+        ans2=possible;
+    }
+    }
+    return ans2;
+}
+bool StructuralIdentical(TreeNode<int>*root1,TreeNode<int>*root2)
+{
+
+      if(root1==NULL)
+    {
+        if(root2==NULL)
+        {
+            return 1;
+        }
+        else
+        {
+           return 0;
+        }
+    }
+    if(root1->data==root2->data)
+    {
+    if(root1->children.size()==root2->children.size())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    }
+     for(int i=0;i<root1->children.size()&&i<root2->children.size();i++)
+    {
+        bool answer=StructuralIdentical(root1->children[i],root2->children[i]);
+        if(answer)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+void replaceWithDepthValue2(TreeNode<int> *root,int k)
+{
+ if(root==NULL)
+    {
+        return;
+    }
+    root->data=k;
+    for(int i=0;i<root->children.size();i++)
+    {
+        replaceWithDepthValue2(root->children[i],k+1);
+    }
+    return;
+}
+void replaceWithDepthValue(TreeNode<int> *root)
+{
+    /* Don't write main().
+     * Don't read input, it is passed as function argument.
+     * Change in the input tree itself.
+     * No need to return pr print the output.
+     * Taking input and printing output is handled automatically.
+     */
+   replaceWithDepthValue2(root,0);
+
+}
+bool containsX(TreeNode<int>*root,int x)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    if(root->data==x)
+    {
+        return 1;
+    }
+    for(int i=0;i<root->children.size();i++)
+    {
+        bool answer=containsX(root->children[i],x);
+        if(answer)
+        {
+        return answer;
+        }
+    }
+    //AS base case mei check ho raha upar if node is x or not
+    return 0;
+}
+//Level wise print
+void printLevelwise(TreeNode<int>*root)
+{
+    queue<TreeNode<int>*>pending;
+    pending.push(root);
+    while(!pending.empty())
+    {
+        TreeNode<int>*front=pending.front();
+        cout<<front->data<<":";
+        pending.pop();
+        for(int i=0;i<front->children.size();i++)
+        {
+            if(i==front->children.size()-1)
+            {
+                cout<<front->children[i]->data;
+            }
+            else
+            {
+               cout<<front->children[i]->data<<",";
+            }
+            pending.push(front->children[i]);
+        }
+        cout<<endl;
+    }
+}
+//Take input level wise
+TreeNode<int>*inputLevel()
+{
+    int a;
+    cout<<"Enter the root node data"<<endl;
+    cin>>a;
+    TreeNode<int>*root=new TreeNode<int>(a);
+    queue<TreeNode<int>*>PendingNodes;
+    //queue ke andar woh nodes jinka children haven't asked abhi tak
+    PendingNodes.push(root);
+    while(!PendingNodes.empty())
+    {
+        TreeNode<int>*front=PendingNodes.front();
+        PendingNodes.pop();
+        cout<<"Enter number of children of "<<front->data<<endl;
+        int number;
+        cin>>number;
+        for(int i=0;i<number;i++)
+        {
+            cout<<"Enter the "<<i<<" children of "<<front->data<<endl;
+            int childData;
+            cin>>childData;
+            TreeNode<int>*child=new TreeNode<int>(childData);
+            front->children.push_back(child);
+            PendingNodes.push(child);
+        }
+    }
+    return root;
+}
+//Recursively print
+
+int main()
+{
+   TreeNode<int>*root=inputLevel();
+   printLevelwise(root);
+}
+
