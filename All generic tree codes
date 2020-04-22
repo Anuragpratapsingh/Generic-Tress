@@ -212,6 +212,33 @@ void printTree(TreeNode<int>*root)
         printTree(root->children[i]);
     }
 }
+TreeNode <int>* secondLargest(TreeNode<int> *root) 
+{
+//Just like level order traversal and returned the second largest element iterative approach
+    TreeNode<int>*first=root;
+    TreeNode<int>*second=NULL;
+    queue<TreeNode<int>*>remNode;
+    remNode.push(root);
+    while(!remNode.empty())
+    {
+        TreeNode<int>*front=remNode.front();
+        remNode.pop();
+        if(front->data>first->data)
+        {
+        	second=first;
+        	first=front;
+        }
+        else if(second!=NULL&&front->data>second->data)
+        {
+        	second=front;
+        }
+        for(int i=0;i<front->children.size();i++)
+        {
+        	remNode.push(front->children[i]);
+        }  
+    }
+    return second;
+}
 int main()
 {
    TreeNode<int>*root=inputLevel();
